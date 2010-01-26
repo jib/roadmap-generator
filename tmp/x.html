@@ -1,0 +1,486 @@
+<html>
+<head>
+
+  <script type="text/javascript" src="jquery-1.4.min.js"></script>
+  <script type="text/javascript" src="jquery.tablesorter.min.js"></script>    
+    
+  <script type="text/javascript">
+    // documentation at: http://tablesorter.com/
+    
+    $(document).ready( function() { 
+        // add parser through the tablesorter addParser method 
+        $.tablesorter.addParser({ 
+            // set a unique id 
+            id: 'priority', 
+            is: function(s) { 
+                // return false so this parser is not auto detected 
+                return false; 
+            }, 
+            format: function(s) { 
+                // format your data for normalization 
+                return s.toLowerCase()
+                    .replace(/essential/,5)
+                    .replace(/high/,4)
+                    .replace(/medium/,3)
+                    .replace(/low/,2)
+                    .replace(/undefined/,1)
+                    .replace(/not/,0);
+ 
+            }, 
+            // set type, either numeric or text 
+            type: 'numeric' 
+        }); 
+
+        $.tablesorter.addParser({ 
+            // set a unique id 
+            id: 'completion', 
+            is: function(s) { 
+                // return false so this parser is not auto detected 
+                return false; 
+            }, 
+            format: function(s) { 
+                // format your data for normalization 
+                return s.replace(/^(\d+).*/,'\1');
+ 
+            }, 
+            // set type, either numeric or text 
+            type: 'numeric' 
+        }); 
+        
+        // order they appear on the page
+        $("#overview").tablesorter({
+            // sort on priority, spec ascending
+            sortList: [[3,1],[7,0]],
+            headers: { 
+                3: { sorter:'priority' },
+                //6: { sorter:'completion' },                
+            }
+        }); 
+
+        //$("#byassignee").tablesorter({
+        //    // sort on name, ascending
+        //    sortList: [[0,0]] 
+        //});
+
+        // with the 'todo/done' and assignee not appearing on every
+        // row, this does not lend itself well to sorting
+        //$("#byworkitem").tablesorter(); 
+
+    }); 
+  </script>
+    
+</head>
+<body>
+
+          <table id="overview">
+        
+            <thead><tr>
+              <th>Team</th>
+              <th>Assignee</th>
+              <th>Backup</th>
+              <th>Priority</th>
+              <th>Complexity</th>
+              <th>Milestone</th>          
+              <th>Completion</th>                        
+              <th>Blueprint</th>
+              <th>Status</th>          
+            </tr></thead> 
+
+        <tr>
+          <td>canonical-server</td>
+          <td>smoser</td>
+          <td>XXX BACKUP TO BE EXTRACTED</td>
+          <td>High</td>      
+          <td>XXX COMPLEXITY TO BE EXTRACTED</td>
+          <td>lucid-alpha-3</td>
+          <td>73%</td>          
+          <td><a href='https://blueprints.launchpad.net/ubuntu/+spec/server-lucid-ec2-boothooks'>server-lucid-ec2-boothooks</a></td>
+          <td>(not updated)</td>          
+        </tr>  
+        
+
+        <tr>
+          <td>canonical-server</td>
+          <td>mathiaz</td>
+          <td>XXX BACKUP TO BE EXTRACTED</td>
+          <td>High</td>      
+          <td>XXX COMPLEXITY TO BE EXTRACTED</td>
+          <td>ubuntu-10.04-beta-2</td>
+          <td>40%</td>          
+          <td><a href='https://blueprints.launchpad.net/ubuntu/+spec/server-lucid-uec-testing'>server-lucid-uec-testing</a></td>
+          <td>Progress. Currently testing new testbed infrastructure.</td>          
+        </tr>  
+        
+
+        <tr>
+          <td>canonical-server</td>
+          <td>zulcss</td>
+          <td>XXX BACKUP TO BE EXTRACTED</td>
+          <td>High</td>      
+          <td>XXX COMPLEXITY TO BE EXTRACTED</td>
+          <td>lucid-alpha-3</td>
+          <td>60%</td>          
+          <td><a href='https://blueprints.launchpad.net/ubuntu/+spec/server-lucid-mysql-5.0'>server-lucid-mysql-5.0</a></td>
+          <td>good progress, rocking the casbah</td>          
+        </tr>  
+        
+
+        <tr>
+          <td>canonical-foundations</td>
+          <td>vorlon</td>
+          <td>XXX BACKUP TO BE EXTRACTED</td>
+          <td>High</td>      
+          <td>XXX COMPLEXITY TO BE EXTRACTED</td>
+          <td>Unassigned</td>
+          <td>0%</td>          
+          <td><a href='https://blueprints.launchpad.net/ubuntu/+spec/foundations-lucid-upstart-server-review'>foundations-lucid-upstart-server-review</a></td>
+          <td>There are a number of ways in which the boot-time behavior of karmic on server is worse than in previous releases as a result of the partial conversion to event-based upstart jobs.  We need to collate these issues and ensure these can be addressed appropriately for Ubuntu 10.04 LTS.</td>          
+        </tr>  
+        
+
+        <tr>
+          <td>canonical-server</td>
+          <td>smoser</td>
+          <td>XXX BACKUP TO BE EXTRACTED</td>
+          <td>High</td>      
+          <td>XXX COMPLEXITY TO BE EXTRACTED</td>
+          <td>lucid-alpha-3</td>
+          <td>76%</td>          
+          <td><a href='https://blueprints.launchpad.net/ubuntu/+spec/server-lucid-cloud-krd'>server-lucid-cloud-krd</a></td>
+          <td>progress, but need new kernels</td>          
+        </tr>  
+        
+
+        <tr>
+          <td>canonical-server</td>
+          <td>smoser</td>
+          <td>XXX BACKUP TO BE EXTRACTED</td>
+          <td>Low</td>      
+          <td>XXX COMPLEXITY TO BE EXTRACTED</td>
+          <td>lucid-alpha-3</td>
+          <td>6%</td>          
+          <td><a href='https://blueprints.launchpad.net/ubuntu/+spec/server-lucid-xc2'>server-lucid-xc2</a></td>
+          <td>Will be started once prio 1 specs are completed.</td>          
+        </tr>  
+        
+
+        <tr>
+          <td>canonical-server</td>
+          <td>ttx</td>
+          <td>XXX BACKUP TO BE EXTRACTED</td>
+          <td>High</td>      
+          <td>XXX COMPLEXITY TO BE EXTRACTED</td>
+          <td>lucid-alpha-2</td>
+          <td>77%</td>          
+          <td><a href='https://blueprints.launchpad.net/ubuntu/+spec/server-lucid-euca-remote-autoregister'>server-lucid-euca-remote-autoregister</a></td>
+          <td>On track</td>          
+        </tr>  
+        
+
+        <tr>
+          <td>canonical-server</td>
+          <td>stgraber</td>
+          <td>XXX BACKUP TO BE EXTRACTED</td>
+          <td>Low</td>      
+          <td>XXX COMPLEXITY TO BE EXTRACTED</td>
+          <td>lucid-alpha-3</td>
+          <td>0%</td>          
+          <td><a href='https://blueprints.launchpad.net/ubuntu/+spec/server-lucid-contextualization'>server-lucid-contextualization</a></td>
+          <td>(not updated)</td>          
+        </tr>  
+        
+
+        <tr>
+          <td>canonical-server</td>
+          <td>zulcss</td>
+          <td>XXX BACKUP TO BE EXTRACTED</td>
+          <td>High</td>      
+          <td>XXX COMPLEXITY TO BE EXTRACTED</td>
+          <td>lucid-alpha-3</td>
+          <td>92%</td>          
+          <td><a href='https://blueprints.launchpad.net/ubuntu/+spec/server-lucid-canonical-application-support'>server-lucid-canonical-application-support</a></td>
+          <td>(not updated)</td>          
+        </tr>  
+        
+
+        <tr>
+          <td>canonical-server</td>
+          <td>zulcss</td>
+          <td>XXX BACKUP TO BE EXTRACTED</td>
+          <td>High</td>      
+          <td>XXX COMPLEXITY TO BE EXTRACTED</td>
+          <td>lucid-alpha-3</td>
+          <td>22%</td>          
+          <td><a href='https://blueprints.launchpad.net/ubuntu/+spec/server-lucid-apport-hooks'>server-lucid-apport-hooks</a></td>
+          <td>On track</td>          
+        </tr>  
+        
+
+        <tr>
+          <td>canonical-server</td>
+          <td>soren</td>
+          <td>XXX BACKUP TO BE EXTRACTED</td>
+          <td>Low</td>      
+          <td>XXX COMPLEXITY TO BE EXTRACTED</td>
+          <td>lucid-alpha-3</td>
+          <td>16%</td>          
+          <td><a href='https://blueprints.launchpad.net/ubuntu/+spec/server-lucid-puppet-etckeeper-integration'>server-lucid-puppet-etckeeper-integration</a></td>
+          <td>(not updated)</td>          
+        </tr>  
+        
+
+        <tr>
+          <td>canonical-server</td>
+          <td>soren</td>
+          <td>XXX BACKUP TO BE EXTRACTED</td>
+          <td>High</td>      
+          <td>XXX COMPLEXITY TO BE EXTRACTED</td>
+          <td>lucid-alpha-3</td>
+          <td>51%</td>          
+          <td><a href='https://blueprints.launchpad.net/ubuntu/+spec/qa-lucid-automated-server-testing'>qa-lucid-automated-server-testing</a></td>
+          <td>(not updated)</td>          
+        </tr>  
+        
+
+        <tr>
+          <td>canonical-server</td>
+          <td>kirkland</td>
+          <td>XXX BACKUP TO BE EXTRACTED</td>
+          <td>High</td>      
+          <td>XXX COMPLEXITY TO BE EXTRACTED</td>
+          <td>lucid-alpha-2</td>
+          <td>82%</td>          
+          <td><a href='https://blueprints.launchpad.net/ubuntu/+spec/server-lucid-eucalyptus-merging-and-packaging'>server-lucid-eucalyptus-merging-and-packaging</a></td>
+          <td>On track.</td>          
+        </tr>  
+        
+
+        <tr>
+          <td>canonical-server</td>
+          <td>ubuntu-ha</td>
+          <td>XXX BACKUP TO BE EXTRACTED</td>
+          <td>Medium</td>      
+          <td>XXX COMPLEXITY TO BE EXTRACTED</td>
+          <td>lucid-alpha-3</td>
+          <td>Unknown</td>          
+          <td><a href='https://blueprints.launchpad.net/ubuntu/+spec/server-lucid-cluster-stack'>server-lucid-cluster-stack</a></td>
+          <td>Even though Ubuntu offers couple of cluster stacks in its archives, ubuntu-ha team feels that we should define one or two stacks for high availability and load balancing clusters. In the open source world there's an intention on bringing most prominent cluster system more closer together, or in the end even merge them into one.</td>          
+        </tr>  
+        
+
+        <tr>
+          <td>canonical-server</td>
+          <td>ttx</td>
+          <td>XXX BACKUP TO BE EXTRACTED</td>
+          <td>Medium</td>      
+          <td>XXX COMPLEXITY TO BE EXTRACTED</td>
+          <td>lucid-alpha-3</td>
+          <td>20%</td>          
+          <td><a href='https://blueprints.launchpad.net/ubuntu/+spec/server-lucid-java-library-fixes'>server-lucid-java-library-fixes</a></td>
+          <td>On track.</td>          
+        </tr>  
+        
+
+        <tr>
+          <td>canonical-server</td>
+          <td>mathiaz</td>
+          <td>XXX BACKUP TO BE EXTRACTED</td>
+          <td>High</td>      
+          <td>XXX COMPLEXITY TO BE EXTRACTED</td>
+          <td>lucid-alpha-3</td>
+          <td>69%</td>          
+          <td><a href='https://blueprints.launchpad.net/ubuntu/+spec/server-lucid-seeds'>server-lucid-seeds</a></td>
+          <td>Waiting for cluster testing feedback.</td>          
+        </tr>  
+        
+
+        <tr>
+          <td>canonical-server</td>
+          <td>jmdault</td>
+          <td>XXX BACKUP TO BE EXTRACTED</td>
+          <td>Medium</td>      
+          <td>XXX COMPLEXITY TO BE EXTRACTED</td>
+          <td>lucid-alpha-3</td>
+          <td>Unknown</td>          
+          <td><a href='https://blueprints.launchpad.net/ubuntu/+spec/server-lucid-asterisk-integration'>server-lucid-asterisk-integration</a></td>
+          <td>It would be extremely impressive if Ubuntu could provide a simple PABX and VoIP set-up out of the box. It will undermine use of Skype (Chinese censorship; closed protocol), and have the added benefit of giving users voicemail, and VoIP from a phone handset.</td>          
+        </tr>  
+        
+
+        <tr>
+          <td>canonical-server</td>
+          <td>mathiaz</td>
+          <td>XXX BACKUP TO BE EXTRACTED</td>
+          <td>Medium</td>      
+          <td>XXX COMPLEXITY TO BE EXTRACTED</td>
+          <td>lucid-alpha-3</td>
+          <td>40%</td>          
+          <td><a href='https://blueprints.launchpad.net/ubuntu/+spec/server-lucid-aws-client-libraries'>server-lucid-aws-client-libraries</a></td>
+          <td>On track</td>          
+        </tr>  
+        
+
+        <tr>
+          <td>canonical-server</td>
+          <td>mathiaz</td>
+          <td>XXX BACKUP TO BE EXTRACTED</td>
+          <td>Medium</td>      
+          <td>XXX COMPLEXITY TO BE EXTRACTED</td>
+          <td>lucid-alpha-3</td>
+          <td>0%</td>          
+          <td><a href='https://blueprints.launchpad.net/ubuntu/+spec/server-lucid-puppet-uec-ec2-integration'>server-lucid-puppet-uec-ec2-integration</a></td>
+          <td>Not started yet. Need a UEC test bed.</td>          
+        </tr>  
+        
+
+        <tr>
+          <td>Unassigned</td>
+          <td>Unassigned</td>
+          <td>XXX BACKUP TO BE EXTRACTED</td>
+          <td>Medium</td>      
+          <td>XXX COMPLEXITY TO BE EXTRACTED</td>
+          <td>Unassigned</td>
+          <td>Unknown</td>          
+          <td><a href='https://wiki.ubuntu.com/KernelTeam/ReleaseStatus/LucidTasks#Server%20Enablement'>KernelTeam/ReleaseStatus/LucidTasks Server Enablement</a></td>
+          <td> Ensure we have good support for common servers. </td>          
+        </tr>  
+        
+
+        <tr>
+          <td>canonical-server</td>
+          <td>zulcss</td>
+          <td>XXX BACKUP TO BE EXTRACTED</td>
+          <td>High</td>      
+          <td>XXX COMPLEXITY TO BE EXTRACTED</td>
+          <td>lucid-alpha-2</td>
+          <td>100%</td>          
+          <td><a href='https://blueprints.launchpad.net/ubuntu/+spec/server-lucid-landscape-refresh'>server-lucid-landscape-refresh</a></td>
+          <td>Refresh of Landscape for Lucid.</td>          
+        </tr>  
+        
+
+        <tr>
+          <td>canonical-server</td>
+          <td>ttx</td>
+          <td>XXX BACKUP TO BE EXTRACTED</td>
+          <td>High</td>      
+          <td>XXX COMPLEXITY TO BE EXTRACTED</td>
+          <td>ubuntu-10.04-beta-2</td>
+          <td>75%</td>          
+          <td><a href='https://blueprints.launchpad.net/ubuntu/+spec/server-lucid-eucalyptus-karmic-retrospective'>server-lucid-eucalyptus-karmic-retrospective</a></td>
+          <td>On track (remaining items will be taken care of at sprint)</td>          
+        </tr>  
+        
+
+        <tr>
+          <td>canonical-server</td>
+          <td>soren</td>
+          <td>XXX BACKUP TO BE EXTRACTED</td>
+          <td>Low</td>      
+          <td>XXX COMPLEXITY TO BE EXTRACTED</td>
+          <td>lucid-alpha-3</td>
+          <td>50%</td>          
+          <td><a href='https://blueprints.launchpad.net/ubuntu/+spec/server-lucid-vmbuilder-multiple-outputs'>server-lucid-vmbuilder-multiple-outputs</a></td>
+          <td>(not updated)</td>          
+        </tr>  
+        
+
+        <tr>
+          <td>canonical-server</td>
+          <td>zulcss</td>
+          <td>XXX BACKUP TO BE EXTRACTED</td>
+          <td>Medium</td>      
+          <td>XXX COMPLEXITY TO BE EXTRACTED</td>
+          <td>lucid-alpha-3</td>
+          <td>4%</td>          
+          <td><a href='https://blueprints.launchpad.net/ubuntu/+spec/server-lucid-daily-vcs'>server-lucid-daily-vcs</a></td>
+          <td>on track</td>          
+        </tr>  
+        
+
+        <tr>
+          <td>canonical-server</td>
+          <td>kirkland</td>
+          <td>XXX BACKUP TO BE EXTRACTED</td>
+          <td>Medium</td>      
+          <td>XXX COMPLEXITY TO BE EXTRACTED</td>
+          <td>lucid-alpha-2</td>
+          <td>100%</td>          
+          <td><a href='https://blueprints.launchpad.net/ubuntu/+spec/server-lucid-euca2ools'>server-lucid-euca2ools</a></td>
+          <td>Euca2ools are the preferred command line clients for UEC.
+
+There are some improvements that could be made to these, those include, but are not limited to:
+
+ * config file based configuration (as opposed to .eucarc/environment)
+
+ *  --region support for euca2ools (I [smoser] believe that euca2ools do not support '--region' but rather only re-setting EC2_URL. i could be wrong).</td>          
+        </tr>  
+        
+
+        <tr>
+          <td>canonical-server</td>
+          <td>mathiaz</td>
+          <td>XXX BACKUP TO BE EXTRACTED</td>
+          <td>Low</td>      
+          <td>XXX COMPLEXITY TO BE EXTRACTED</td>
+          <td>lucid-alpha-3</td>
+          <td>0%</td>          
+          <td><a href='https://blueprints.launchpad.net/ubuntu/+spec/server-lucid-id-mgmt-reference-env'>server-lucid-id-mgmt-reference-env</a></td>
+          <td>Not started.</td>          
+        </tr>  
+        
+
+        <tr>
+          <td>canonical-server</td>
+          <td>ttx</td>
+          <td>XXX BACKUP TO BE EXTRACTED</td>
+          <td>Low</td>      
+          <td>XXX COMPLEXITY TO BE EXTRACTED</td>
+          <td>ubuntu-10.04-beta-1</td>
+          <td>83%</td>          
+          <td><a href='https://blueprints.launchpad.net/ubuntu/+spec/server-lucid-papercuts'>server-lucid-papercuts</a></td>
+          <td>On track (only project design discussions for alpha-3).</td>          
+        </tr>  
+        
+
+        <tr>
+          <td>canonical-server</td>
+          <td>ivoks</td>
+          <td>XXX BACKUP TO BE EXTRACTED</td>
+          <td>Low</td>      
+          <td>XXX COMPLEXITY TO BE EXTRACTED</td>
+          <td>lucid-alpha-3</td>
+          <td>Unknown</td>          
+          <td><a href='https://blueprints.launchpad.net/ubuntu/+spec/server-lucid-more-mail-integration'>server-lucid-more-mail-integration</a></td>
+          <td>Build on postfix-dovecot and provide a similarly easy way to bring anti-spam/anti-virus integration.</td>          
+        </tr>  
+        
+
+        <tr>
+          <td>canonical-server</td>
+          <td>mathiaz</td>
+          <td>XXX BACKUP TO BE EXTRACTED</td>
+          <td>Low</td>      
+          <td>XXX COMPLEXITY TO BE EXTRACTED</td>
+          <td>lucid-alpha-3</td>
+          <td>9%</td>          
+          <td><a href='https://blueprints.launchpad.net/ubuntu/+spec/server-lucid-id-mgmt-login-testing'>server-lucid-id-mgmt-login-testing</a></td>
+          <td>On track</td>          
+        </tr>  
+        
+
+        <tr>
+          <td>canonical-server</td>
+          <td>smoser</td>
+          <td>XXX BACKUP TO BE EXTRACTED</td>
+          <td>High</td>      
+          <td>XXX COMPLEXITY TO BE EXTRACTED</td>
+          <td>lucid-alpha-3</td>
+          <td>83%</td>          
+          <td><a href='https://blueprints.launchpad.net/ubuntu/+spec/server-lucid-ec2-config'>server-lucid-ec2-config</a></td>
+          <td>on track</td>          
+        </tr>  
+        
+</table>
+</body>
+</html>

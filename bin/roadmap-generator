@@ -1,0 +1,17 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use File::Find;
+use Getopt::Std;
+use Data::Dumper;
+use Canonical::Roadmap::Generator;
+
+my $opts = {};
+getopts('u:', $opts) or die usage();
+#getopts('Ddcvzthxf:I', $opts) or die usage();
+
+my $crg = Canonical::Roadmap::Generator->new( uri => $opts->{'u'} );
+
+print $crg->generate_html();
