@@ -8,6 +8,7 @@ use File::Fetch;
 use Params::Check   qw[check];
 use JSON::Any;
 use Data::Dumper;
+$Data::Dumper::Indent = 1;
 
 use base 'Object::Accessor';
 
@@ -21,7 +22,8 @@ sub new {
         _json       => { default => JSON::Any->new , no_override => 1 },
         _ff         => { default => undef, no_override => 1 },
         _content    => { default => undef, no_override => 1 },        
-        _data       => { default => undef, no_override => 1 },        
+        _data       => { default => undef, no_override => 1 },      
+        _per_ms     => { default => {},    no_override => 1 },      
     };
     
     my $args = check( $tmpl, \%hash ) or croak Params::Check::last_error;
@@ -54,9 +56,10 @@ sub fetch {
 }
 
 sub generate_html {
-    my $self = shift;
-    my $data = $self->_data || $self->fetch;
-    my $href = $data->{'specs'} or croak 'No spec data in '. $self->uri;
+    my $self    = shift;
+    my $data    = $self->_data || $self->fetch;
+    my $href    = $data->{'specs'} or croak 'No spec data in '. $self->uri;
+    my $per_ms  = $self->_specs_per_milestone( $href );
 
     my @html;
 
@@ -69,11 +72,47 @@ sub generate_html {
 
     push @html, 
         "<body>",
-        $self->_generate_html_overview( $href ),
+        $self->_generate_html_overview( $per_ms ),
         "</body>";
         
-        
+    print Dumper 
+    
+    
     return join $/, '<html>', @html, '</html>';
+}
+
+sub _specs_per_milestone {
+    my $self = shift;
+    my $href = shift;
+    my %rv   = ();
+
+    while( my($name, $d) = each %$href ) {
+        my $spec_ms = $d->{'milestone'} || 'unknown';
+        
+        ### mark this spec as being worked on in this milestone
+        push @{ $rv{ $spec_ms } ||= [] }, 
+            { name      => $name, 
+              target    => 'Completion',
+              spec      => $d,
+              complete  => 1,
+            };
+
+        ### also add it to the milestone of it's work items
+        ### XXX add target from meta info
+        my %seen;
+        for my $wi ( @{ $d->{'work_items'} } ) {
+            my $wi_ms = $wi->{'milestone'} || 'unknown';
+
+            push @{ $rv{ $wi_ms ||= [] } }, 
+                { name      => $name, 
+                  target    => 'XXX TODO',
+                  spec      => $d,
+                  complete  => 0,
+                } unless $seen{$wi_ms}++ or $spec_ms eq $wi_ms;
+        }
+    }
+    
+    return $self->_per_ms( \%rv );
 }
 
 sub _generate_html_js {
@@ -127,7 +166,7 @@ sub _generate_html_js {
         }); 
         
         // order they appear on the page
-        $("#overview").tablesorter({
+        $(".overview").tablesorter({
             // sort on priority, spec ascending
             sortList: [[3,1],[7,0]],
             headers: { 
@@ -151,11 +190,12 @@ sub _generate_html_js {
 }
 
 sub _generate_html_overview {
-    my $self = shift;
-    my $href = shift;
-
-    my @html = ( q|
-          <table id="overview">
+    my $self    = shift;
+    my $per_ms  = shift;
+    my @html;
+    
+    my $header = q|
+          <table class="overview">
         
             <thead><tr>
               <th>Team</th>
@@ -163,45 +203,55 @@ sub _generate_html_overview {
               <th>Backup</th>
               <th>Priority</th>
               <th>Complexity</th>
-              <th>Milestone</th>          
+              <th>Final Milestone</th>          
               <th>Completion</th>                        
+              <th>Target</th>                        
               <th>Blueprint</th>
               <th>Status</th>          
-            </tr></thead> | );
+            </tr></thead> |;
 
-    while( my($name, $d) = each %$href ) {
-        my $comp       = $d->{'completion'} || {};
-        my $total      = do { my $x = 0; $x += $_ for values %$comp; $x };
-        my $percentage = keys %$comp 
-            ? int( 100 * $comp->{'done'} / $total ) .'%'
-            : 'Unknown';
+    for my $ms ( sort keys %$per_ms ) {
+        push @html, qq[<h1>$ms</h1>], $header;
 
-        push @html, sprintf q[
-        <tr>
-          <td>%s</td>
-          <td>%s</td>
-          <td>%s</td>
-          <td>%s</td>      
-          <td>%s</td>
-          <td>%s</td>
-          <td>%s</td>          
-          <td><a href='%s'>%s</a></td>
-          <td>%s</td>          
-        </tr>  
-        ], $d->{'team'}         || 'Unassigned',
-           $d->{'assignee'}     || 'Unassigned',
-           "XXX BACKUP TO BE EXTRACTED",
-           $d->{'priority'}     || 0,
-           "XXX COMPLEXITY TO BE EXTRACTED",
-           $d->{'milestone'}    || 'Unassigned',
-           $percentage,
-           $d->{'url'},         $d->{'name'},
-           $d->{'status'}       || 'Not updated',
-        ;
+        for my $href ( @{ $per_ms->{$ms} } ) {
+            my $name = $href->{'name'};
+            my $d    = $href->{'spec'};
+        
+            my $comp       = $d->{'completion'} || {};
+            my $total      = do { my $x = 0; $x += $_ for values %$comp; $x };
+            my $percentage = keys %$comp 
+                ? int( 100 * $comp->{'done'} / $total ) .'%'
+                : 'Unknown';
+    
+            push @html, sprintf q[
+            <tr>
+              <td>%s</td>
+              <td>%s</td>
+              <td>%s</td>
+              <td>%s</td>      
+              <td>%s</td>
+              <td>%s</td>
+              <td>%s</td>    
+              <td>%s</td>                  
+              <td><a href='%s'>%s</a></td>
+              <td>%s</td>          
+            </tr>  
+            ], $d->{'team'}         || 'Unassigned',
+               $d->{'assignee'}     || 'Unassigned',
+               "XXX BACKUP TO BE EXTRACTED",
+               $d->{'priority'}     || 0,
+               "XXX COMPLEXITY TO BE EXTRACTED",
+               $d->{'milestone'}    || 'Unassigned',
+               $percentage,
+               $href->{'target'},
+               $d->{'url'},         $d->{'name'},
+               $d->{'status'}       || 'Not updated',
+            ;
+        }
+        
+        push @html, '</table>';
     }
     
-    push @html, '</table>';
-
     return @html
 }
 
